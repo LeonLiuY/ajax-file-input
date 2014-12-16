@@ -22,7 +22,8 @@
     "polymer": "Polymer/polymer#^0.5.2",
     "paper-fab": "Polymer/paper-fab#~0.5.2",
     "paper-progress": "Polymer/paper-progress#~0.5.2",
-    "core-label": "Polymer/core-label#~0.5.2"
+    "core-label": "Polymer/core-label#~0.5.2",
+    "paper-toast": "Polymer/paper-toast#~0.5.2"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^2.0.5"

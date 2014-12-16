@@ -12,19 +12,20 @@
 <link rel="import" href="../core-icons/core-icons.html">
 <link rel="import" href="../paper-progress/paper-progress.html">
 <link rel="import" href="../paper-fab/paper-fab.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
 <!--
 Element providing ajax file upload with progress bar and material design.
 
 ##### Example
 
-    <ajax-file-input></ajax-file-input>
+    <ajax-file-input url="/upload"></ajax-file-input>
 
 @element ajax-file-input
 @blurb Element providing ajax file upload with progress bar and material design.
 @status alpha
 @homepage http://liuyang1204.github.io/ajax-file-input
 -->
-<polymer-element name="ajax-file-input">
+<polymer-element name="ajax-file-input" attributes="url">
 
   <template>
 
@@ -50,12 +51,24 @@ Element providing ajax file upload with progress bar and material design.
       <li invisible?={{progressInvisible}}><paper-progress value="{{progress}}"></paper-progress></li>
     </ul>
     <input type="file" id="fileInput" on-change="{{fileChange}}" hidden>
-
+    <paper-toast id="toastSuccess" text="File uploaded successfully!"></paper-toast>
+    <paper-toast id="toastFail" text="Error uploading file!"></paper-toast>
   </template>
 
   <script>
 
     Polymer({
+
+      /**
+       * The target url to upload the file
+       *
+       * @attribute url
+       * @type string
+       * @default "/"
+       */
+
+      url: "/",
+
       progressInvisible: true,
 
       onClick: function(){
@@ -83,8 +96,14 @@ Element providing ajax file upload with progress bar and material design.
             var done = e.loaded, total = e.total;
             self.progress = Math.floor(done/total*1000)/10;
           });
-          xhr.open('POST', "/upload", true);
-
+          xhr.open('POST', this.url, true);
+          xhr.onload = function(e) {
+            if(xhr.status == 200) {
+              self.$.toastSuccess.show();
+            } else {
+              self.$.toastFail.show();
+            }
+          };
           this.progressInvisible = false;
           xhr.send(formData);
         }
