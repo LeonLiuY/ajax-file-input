@@ -1,0 +1,30 @@
+{
+  "name": "ajax-file-input",
+  "version": "0.0.0",
+  "authors": [
+    "Liu Yang <liuyang1204@hotmail.com>"
+  ],
+  "description": "Element providing solution to no problem in particular.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "seed"
+  ],
+  "main": "seed-element.html",
+  "license": "MIT",
+  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "ignore": [
+    "/.*",
+    "/tests/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.2",
+    "paper-fab": "Polymer/paper-fab#~0.5.2",
+    "paper-progress": "Polymer/paper-progress#~0.5.2",
+    "core-label": "Polymer/core-label#~0.5.2"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.0.5"
+  }
+}

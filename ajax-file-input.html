@@ -1,0 +1,114 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-label/core-label.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../paper-progress/paper-progress.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+<!--
+Element providing solution to no problem in particular.
+
+##### Example
+
+    <seed-element></seed-element>
+
+@element seed-element
+@blurb Element providing solution to no problem in particular.
+@status alpha
+@homepage http://polymerlabs.github.io/seed-element
+-->
+<polymer-element name="ajax-file-input" attributes="notitle author">
+
+  <template>
+
+    <style type="text/css">
+      paper-fab.blue {
+        background: #5677fc;
+      }
+
+      ul {
+        display: inline-block;
+        list-style-type: none;
+      }
+
+      [invisible] {
+        visibility: hidden;
+      }
+    </style>
+
+    <!--noink because OS X file upload dialog animation makes ink animation stuck-->
+    <paper-fab mini noink icon="file-upload" class="blue" on-click="{{onClick}}"></paper-fab>
+    <ul>
+      <li><core-label>{{fileName}}</core-label></li>
+      <li invisible?={{progressInvisible}}><paper-progress value="{{progress}}"></paper-progress></li>
+    </ul>
+    <input type="file" id="fileInput" on-change="{{fileChange}}" hidden>
+
+  </template>
+
+  <script>
+
+    Polymer({
+      /**
+       * The `author` attribute sets an initial author
+       *
+       * @attribute author
+       * @type string
+       * @default 'Dimitri Glazkov'
+       */
+      author: 'Liu Yang',
+
+      /**
+       * `fancy` is a property that does something fancy.
+       *
+       * @property fancy
+       * @type bool
+       * @default false
+       */
+      fancy: false,
+
+      progressInvisible: true,
+
+      onClick: function(){
+        var elem = this.$.fileInput;
+        if(elem && document.createEvent) { // sanity check
+          var evt = document.createEvent("MouseEvents");
+          evt.initEvent("click", true, false);
+          elem.dispatchEvent(evt);
+        }
+      },
+      fileChange: function(e) {
+        this.progressInvisible = true;
+        this.progress = undefined;
+        var file = e.target.files[0];
+        if(!file){
+          this.fileName = "";
+        } else{
+          var self = this;
+          this.fileName = file.name;
+          var formData = new FormData();
+          formData.append("file", file);
+
+          var xhr = new XMLHttpRequest();
+          xhr.upload.addEventListener('progress', function(e){
+            var done = e.loaded, total = e.total;
+            self.progress = Math.floor(done/total*1000)/10;
+          });
+          xhr.open('POST', "/upload", true);
+
+          this.progressInvisible = false;
+          xhr.send(formData);
+        }
+      }
+    });
+
+  </script>
+
+</polymer-element>
