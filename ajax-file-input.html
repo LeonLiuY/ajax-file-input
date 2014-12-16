@@ -13,18 +13,18 @@
 <link rel="import" href="../paper-progress/paper-progress.html">
 <link rel="import" href="../paper-fab/paper-fab.html">
 <!--
-Element providing solution to no problem in particular.
+Element providing ajax file upload with progress bar and material design.
 
 ##### Example
 
-    <seed-element></seed-element>
+    <ajax-file-input></ajax-file-input>
 
-@element seed-element
-@blurb Element providing solution to no problem in particular.
+@element ajax-file-input
+@blurb Element providing ajax file upload with progress bar and material design.
 @status alpha
-@homepage http://polymerlabs.github.io/seed-element
+@homepage http://liuyang1204.github.io/ajax-file-input
 -->
-<polymer-element name="ajax-file-input" attributes="notitle author">
+<polymer-element name="ajax-file-input">
 
   <template>
 
@@ -56,24 +56,6 @@ Element providing solution to no problem in particular.
   <script>
 
     Polymer({
-      /**
-       * The `author` attribute sets an initial author
-       *
-       * @attribute author
-       * @type string
-       * @default 'Dimitri Glazkov'
-       */
-      author: 'Liu Yang',
-
-      /**
-       * `fancy` is a property that does something fancy.
-       *
-       * @property fancy
-       * @type bool
-       * @default false
-       */
-      fancy: false,
-
       progressInvisible: true,
 
       onClick: function(){
