@@ -1,19 +1,20 @@
 {
   "name": "ajax-file-input",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "authors": [
     "Liu Yang <liuyang1204@hotmail.com>"
   ],
-  "description": "Element providing solution to no problem in particular.",
+  "description": "Ajax file input with material design",
   "keywords": [
     "web-component",
     "web-components",
     "polymer",
-    "seed"
+    "file input",
+    "ajax"
   ],
-  "main": "seed-element.html",
+  "main": "ajax-file-input.html",
   "license": "MIT",
-  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "homepage": "https://github.com/liuyang1204/ajax-file-input",
   "ignore": [
     "/.*",
     "/tests/"
