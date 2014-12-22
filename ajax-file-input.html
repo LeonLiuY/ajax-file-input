@@ -25,7 +25,7 @@ Element providing ajax file upload with progress bar and material design.
 @status alpha
 @homepage http://liuyang1204.github.io/ajax-file-input
 -->
-<polymer-element name="ajax-file-input" attributes="url response">
+<polymer-element name="ajax-file-input" attributes="url onsuccess">
 
   <template>
 
@@ -81,14 +81,13 @@ Element providing ajax file upload with progress bar and material design.
 
       url: "/",
       /**
-       * The response after upload compelete, or null if it hasn't
-       * completed yet or the request resulted in error.
+       * Callback function for process responsing after upload compelete.
        *
-       * @attribute response
-       * @type Object
+       * @attribute onsuccess
+       * @type function
        * @default null
        */
-      response: null,
+      onsuccess: null,
 
       progressInvisible: true,
 
@@ -121,9 +120,7 @@ Element providing ajax file upload with progress bar and material design.
           xhr.onload = function(e) {
             if(xhr.status == 200) {
               self.$.toastSuccess.show();
-              var response = self.evalResponse(xhr);
-              self.response = response;
-             
+              self.onsuccess(xhr);
             } else {
               self.$.toastFail.show();
             }
@@ -131,17 +128,6 @@ Element providing ajax file upload with progress bar and material design.
           };
           this.progressInvisible = false;
           xhr.send(formData);
-        }
-      }, 
-      evalResponse: function(xhr) {
-        var r = xhr.responseText;
-        try {
-          return JSON.parse(r);
-        } catch (x) {
-          console.warn('ajax-file-input caught an exception trying to parse response as JSON:');
-          console.warn('url:', this.url);
-          console.warn(x);
-          return r;
         }
       },
     });
