@@ -39,17 +39,29 @@ Element providing ajax file upload with progress bar and material design.
         list-style-type: none;
       }
 
+      div.upload {
+        margin-right: 10px;
+      }
+
       [invisible] {
         visibility: hidden;
       }
     </style>
 
-    <!--noink because OS X file upload dialog animation makes ink animation stuck-->
-    <paper-fab mini noink icon="file-upload" class="blue" on-click="{{onClick}}"></paper-fab>
-    <ul>
-      <li><core-label>{{fileName}}</core-label></li>
-      <li invisible?={{progressInvisible}}><paper-progress value="{{progress}}"></paper-progress></li>
-    </ul>
+    <div horizontal layout center>
+      <div class="upload">
+        <!--noink because OS X file upload dialog animation makes ink animation stuck-->
+        <paper-fab mini noink icon="file-upload" class="blue" on-click="{{onClick}}"></paper-fab>
+      </div>
+      <div>
+        <div>
+          <core-label>{{fileName}}</core-label>
+        </div>
+        <div invisible?={{progressInvisible}}>
+          <paper-progress value="{{progress}}"></paper-progress>
+        </div>
+      </div>
+    </div>
     <input type="file" id="fileInput" on-change="{{fileChange}}" hidden>
     <paper-toast id="toastSuccess" text="File uploaded successfully!"></paper-toast>
     <paper-toast id="toastFail" text="Error uploading file!"></paper-toast>
