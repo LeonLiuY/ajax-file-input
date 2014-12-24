@@ -1,0 +1,7 @@
+{
+  "name": "ajax-file-input#gh-pages",
+  "private": true,
+  "dependencies": {
+    "ajax-file-input": "liuyang1204/ajax-file-input#master"
+  }
+}

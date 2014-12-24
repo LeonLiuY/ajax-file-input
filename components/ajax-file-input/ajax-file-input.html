@@ -1,0 +1,142 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-label/core-label.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../paper-progress/paper-progress.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+<!--
+Element providing ajax file upload with progress bar and material design.
+
+##### Example
+
+    <ajax-file-input url="/upload" on-success="{{handleResponse}}"></ajax-file-input>
+
+@element ajax-file-input
+@blurb Element providing ajax file upload with progress bar and material design.
+@status alpha
+@homepage http://liuyang1204.github.io/ajax-file-input
+-->
+<polymer-element name="ajax-file-input" attributes="url">
+
+  <template>
+
+    <style type="text/css">
+      paper-fab.blue {
+        background: #5677fc;
+      }
+
+      ul {
+        display: inline-block;
+        list-style-type: none;
+      }
+
+      div.upload {
+        margin-right: 10px;
+      }
+
+      [invisible] {
+        visibility: hidden;
+      }
+    </style>
+
+    <div horizontal layout center>
+      <div class="upload">
+        <!--noink because OS X file upload dialog animation makes ink animation stuck-->
+        <paper-fab mini noink icon="file-upload" class="blue" on-click="{{onClick}}"></paper-fab>
+      </div>
+      <div>
+        <div>
+          <core-label>{{fileName}}</core-label>
+        </div>
+        <div invisible?={{progressInvisible}}>
+          <paper-progress value="{{progress}}"></paper-progress>
+        </div>
+      </div>
+    </div>
+    <input type="file" id="fileInput" on-change="{{fileChange}}" hidden>
+    <paper-toast id="toastSuccess" text="File uploaded successfully!"></paper-toast>
+    <paper-toast id="toastFail" text="Error uploading file!"></paper-toast>
+  </template>
+
+  <script>
+
+    Polymer('ajax-file-input', {
+      /**
+       * Fired when a response is received status code 200.
+       *
+       * @event success
+       */
+       
+      /**
+       * Fired when a response is received other status code.
+       *
+       * @event error
+       */
+
+      /**
+       * The target url to upload the file
+       *
+       * @attribute url
+       * @type string
+       * @default "/"
+       */
+
+      url: "/",
+
+      progressInvisible: true,
+
+      onClick: function(){
+        var elem = this.$.fileInput;
+        if(elem && document.createEvent) { // sanity check
+          var evt = document.createEvent("MouseEvents");
+          evt.initEvent("click", true, false);
+          elem.dispatchEvent(evt);
+        }
+      },
+      fileChange: function(e) {
+        this.progressInvisible = true;
+        this.progress = undefined;
+        var file = e.target.files[0];
+        if(!file){
+          this.fileName = "";
+        } else{
+          var self = this;
+          this.fileName = file.name;
+          var formData = new FormData();
+          formData.append("file", file);
+
+          var xhr = new XMLHttpRequest();
+          xhr.upload.addEventListener('progress', function(e){
+            var done = e.loaded, total = e.total;
+            self.progress = Math.floor(done/total*1000)/10;
+          });
+          xhr.open('POST', this.url, true);
+          xhr.onload = function(e) {
+            if(xhr.status == 200) {
+              self.$.toastSuccess.show();
+              self.fire('success', {xhr:xhr});
+              
+            } else {
+              self.$.toastFail.show();
+              self.fire('error', {xhr:xhr});
+            }
+
+          };
+          this.progressInvisible = false;
+          xhr.send(formData);
+        }
+      },
+    });
+
+  </script>
+
+</polymer-element>
