@@ -15,7 +15,7 @@
 <link rel="import" href="../paper-toast/paper-toast.html">
 <!--
 Element providing ajax file upload with progress bar and material design.
-
+It supports file drop. 
 ##### Example
 
     <ajax-file-input url="/upload" on-success="{{handleResponse}}"></ajax-file-input>
@@ -25,11 +25,18 @@ Element providing ajax file upload with progress bar and material design.
 @status alpha
 @homepage http://liuyang1204.github.io/ajax-file-input
 -->
-<polymer-element name="ajax-file-input" attributes="url">
+<polymer-element name="ajax-file-input" attributes="url supportFileDrop">
 
   <template>
 
     <style type="text/css">
+      .hover {
+        border: 1px dashed DarkGray;
+      }
+      #UploadBorder{
+        vertical-align: center;
+        color: DarkGray;
+      }
       paper-fab.blue {
         background: #5677fc;
       }
@@ -53,7 +60,7 @@ Element providing ajax file upload with progress bar and material design.
         <!--noink because OS X file upload dialog animation makes ink animation stuck-->
         <paper-fab mini noink icon="file-upload" class="blue" on-click="{{onClick}}"></paper-fab>
       </div>
-      <div>
+      <div id ='UploadBorder'>
         <div>
           <core-label>{{fileName}}</core-label>
         </div>
@@ -94,6 +101,51 @@ Element providing ajax file upload with progress bar and material design.
 
       progressInvisible: true,
 
+      /**
+       *  Support File Drop or not
+       *
+       * @attribute supportFileDrop
+       * @type boolean
+       * @default false
+       */
+      supportFileDrop: false,
+
+      ready: function(){
+        if (this.supportFileDrop){
+          this.setupDrop();
+          this.fileName = 'Please Drop File Here';
+        }
+      },
+
+      setupDrop: function(){
+          this.ondragover = function (e) {
+            e.stopPropagation();
+            this.fileName = 'Please Drop File Here';
+            this.progressInvisible = true;
+            if( !this.$.UploadBorder.classList.contains("hover") ) {
+              this.$.UploadBorder.classList.add("hover");
+            }
+            this.$.UploadBorder.style.color = 'DarkGray';
+            return false;
+          }
+          this.ondragleave = function () {
+            if( this.$.UploadBorder.classList.contains("hover") ) {
+              this.$.UploadBorder.classList.remove("hover");
+            }
+            return false;
+          }
+          this.ondrop = function(event){
+            event.preventDefault();
+            if( this.$.UploadBorder.classList.contains("hover") ) {
+              this.$.UploadBorder.classList.remove("hover");
+            }
+            this.$.UploadBorder.style.color = 'black';
+            for (var i = 0, file; file = event.dataTransfer.files[i]; i++) {
+              this.uploadFile(file);
+            }
+          }
+      },
+
       onClick: function(){
         var elem = this.$.fileInput;
         if(elem && document.createEvent) { // sanity check
@@ -106,6 +158,9 @@ Element providing ajax file upload with progress bar and material design.
         this.progressInvisible = true;
         this.progress = undefined;
         var file = e.target.files[0];
+        this.uploadFile(file);
+      },
+      uploadFile: function(file) {
         if(!file){
           this.fileName = "";
         } else{
@@ -134,7 +189,7 @@ Element providing ajax file upload with progress bar and material design.
           this.progressInvisible = false;
           xhr.send(formData);
         }
-      },
+      }
     });
 
   </script>
