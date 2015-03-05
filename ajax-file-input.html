@@ -109,7 +109,11 @@ It supports file drop.
        * @default false
        */
       supportFileDrop: false,
-
+      clear: function(){
+        this.filename = undefined;
+        this.progressInvisible = true;
+        this.progress = undefined;
+      },
       ready: function(){
         if (this.supportFileDrop){
           this.setupDrop();
