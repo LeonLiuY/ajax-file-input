@@ -82,7 +82,7 @@ It supports file drop.
        *
        * @event success
        */
-       
+
       /**
        * Fired when a response is received other status code.
        *
@@ -164,6 +164,11 @@ It supports file drop.
         var file = e.target.files[0];
         this.uploadFile(file);
       },
+      cancel: function(){
+        if(this.xhr){
+          this.xhr.abort();
+        }
+      },
       uploadFile: function(file) {
         if(!file){
           this.fileName = "";
@@ -173,7 +178,7 @@ It supports file drop.
           var formData = new FormData();
           formData.append("file", file);
 
-          var xhr = new XMLHttpRequest();
+          var xhr = this.xhr = new XMLHttpRequest();
           xhr.upload.addEventListener('progress', function(e){
             var done = e.loaded, total = e.total;
             self.progress = Math.floor(done/total*1000)/10;
@@ -183,7 +188,7 @@ It supports file drop.
             if(xhr.status == 200) {
               self.$.toastSuccess.show();
               self.fire('success', {xhr:xhr});
-              
+
             } else {
               self.$.toastFail.show();
               self.fire('error', {xhr:xhr});
